@@ -1,0 +1,265 @@
+Standart API
+
+{root.api}/{version}/{grouping}/{endpoint}
+SAMPLE:
+htpps://jokoriyadi.com/v1/auth/login
+
+=============================================================================================================
+=============================================================================================================
+
+Standart Status Response
+
+200 - OK                      --> Call API Success
+201 - CREATED                 --> Post Success
+400 - BAD REQUEST             --> Error in Client Side (input salah, dll)
+401 - UNAUTHORIZED            --> User not Authorizerd to the requeset
+403 - FORBIDDEN               --> User not Allowed to Access
+404 - NOT FOUND               --> Request Endpoint Not Found
+500 - INTERNAL SERVER ERROR   --> Error on Server Side
+502 - BAD GATEWAY             --> Invalid Response From Another Request
+
+=============================================================================================================
+=============================================================================================================
+
+GROUP: Authentication
+[1] Register[OK]
+    Link    : {root.api}/{version}/auth/register
+    Method  : POST
+
+    Req : 
+    {
+        "name" : "Testing",
+        "email" : "testing@gmail.com",
+        "password" : "password",
+        "repeatpassword" : "password",
+        "nip": "nip",
+        "instansi": "instansi",
+        "jabatan": "jabatan",
+        "bidang": "bidang",
+        "golongan": "golongan",
+    }
+
+    Res :
+    {
+        "message" : "Register Success",
+        "data" : {
+            "id" : 1,
+            "name" : "Testing",
+            "instansi": "instansi",
+            "jabatan": "jabatan",
+            "nip": "nip",
+            "bidang": "bidang",
+            "golongan": "golongan",
+            "email" : "testing@gmail.com",
+            "password" : "password"
+        }
+    }
+
+    err-response:
+    400 -> input yang anda masukkan tidak valid,
+    404 -> halaman yang anda tuju tidak ditemukan,
+    500 -> internal server error
+
+=============================================================================================================
+
+[2] Login[OK]
+    Link    : {root.api}/{version}/auth/login
+    Method  : POST
+
+    Req : 
+    {
+        "email" : "testing@gmail.com",
+        "password" : "password"
+    }
+
+    Res :
+    {
+        "message" : "Login Success",
+        "status" : "Login",
+        "data" : {
+            "id" : 1,
+            "name" : "Testing",
+            "email" : "testing@gmail.com",
+            "password" : "password",
+            "instansi": "instansi",
+            "jabatan": "jabatan",
+            "nip": "nip",
+            "bidang": "bidang",
+            "golongan": "golongan",
+        }
+    }
+
+    err-response:
+    400 -> input yang anda masukkan tidak valid,
+    404 -> halaman yang anda tuju tidak ditemukan,
+    500 -> internal server error
+
+=============================================================================================================
+=============================================================================================================
+
+GROUP: Perjadin
+[1] Create Perjadin
+    Link    : {root.api}/{version}/perjadin/create
+    Method  : POST
+
+    Req : 
+    {
+        "perihal" : "Perihal Perjalanan Dinas",
+        "berangkatDari": "Bagian Protokol dan Komunikasi Pimpinan"
+        "lokasi" : "Desa Sekar Kecamatan Sekar",,
+        "tanggalBerangkat" : "2022-12-11",
+        "tanggalPulang" : "2022-12-13",
+        "dasarPerjalanDinas" : "file.pdf",
+        "image": "image.png"
+    }
+
+    Res :
+    {
+        "message" : "Create Perjalanan Dinas Success",
+        "data" : {
+            "id" : 1,            
+            "perihal" : "Perihal Perjalanan Dinas",
+            "berangkatDari": "Bagian Protokol dan Komunikasi Pimpinan",
+            "lokasi" : "Lokasi Perjalanan Dinas",
+            "tanggalBerangkat" : "2022-12-11",
+            "tanggalPulang" : "2022-12-13",
+            "dasarPerjalanDinas" : "file.pdf",
+            "date_created" : timestamp,
+            "dasarPerjalanDinas" : "file.pdf",
+            "image": "image.png"
+        }
+    }
+
+    err-response:
+    400 -> input yang anda masukkan tidak valid,
+    404 -> halaman yang anda tuju tidak ditemukan,
+    500 -> internal server error
+
+=============================================================================================================
+
+[2] Get All Perjalanan Dinas
+    Link    : {root.api}/{version}/perjadin
+    Method  : GET
+
+    Res :
+    {
+        "message" : "Get Post Success",
+        "data" : [
+            "id" : 1,            
+            "Perihal" : "Perihal Perjalanan Dinas",
+            "lokasi" : "Lokasi Perjalanan Dinas",
+            "tanggal_berangkat" : "2022-12-11",
+            "tanggal_pulang" : "2022-12-13",
+            "dasar_Perjalan Dinas" : "file.pdf",
+            "date_created" : timestamp
+        },{
+            "id" : 2,          
+            "Perihal" : "Perihal Perjalanan Dinas",
+            "lokasi" : "Lokasi Perjalanan Dinas",
+            "tanggal_berangkat" : "2022-11-11",
+            "tanggal_pulang" : "2022-11-13",
+            "dasar_Perjalan Dinas" : "file.pdf",
+            "date_created" : timestamp
+        },{
+            "id" : 3,         
+            "Perihal" : "Perihal Perjalanan Dinas",
+            "lokasi" : "Lokasi Perjalanan Dinas",
+            "tanggal_berangkat" : "2022-12-11",
+            "tanggal_pulang" : "2022-12-13",
+            "dasar_Perjalan Dinas" : "file.pdf",
+            "date_created" : timestamp
+        }]
+    }
+
+    err-response:
+    400 -> input yang anda masukkan tidak valid,
+    404 -> halaman yang anda tuju tidak ditemukan,
+    500 -> internal server error
+
+=============================================================================================================
+
+[3] Get Single Perjalanan Dinas
+    Link    : {root.api}/{version}/perjadin/{id}
+    Method  : GET
+
+    Res :
+    {
+        "message" : "Get Post Success",
+        "data" : {
+            "id" : 1,            
+            "Perihal" : "Perihal Perjalanan Dinas",
+            "lokasi" : "Lokasi Perjalanan Dinas",
+            "tanggal_berangkat" : "2022-12-11",
+            "tanggal_pulang" : "2022-12-13",
+            "dasar_Perjalan Dinas" : "file.pdf",
+            "date_created" : timestamp
+        }
+    }
+
+    err-response:
+    400 -> input yang anda masukkan tidak valid,
+    404 -> halaman yang anda tuju tidak ditemukan,
+    500 -> internal server error
+
+=============================================================================================================
+
+[4] Update Perjalanan Dinas
+    Link    : {root.api}/{version}/perjadin/update/{id}
+    Method  : PUT/PATCH
+
+    Req : 
+    {
+        "id" : 1,            
+        "Perihal" : "Perihal Perjalanan Dinas 2",
+        "lokasi" : "Lokasi Perjalanan Dinas 2",
+        "tanggal_berangkat" : "2022-12-11",
+        "tanggal_pulang" : "2022-12-13",
+        "dasar_Perjalan Dinas" : "file.pdf",
+        "date_created" : timestamp
+    }
+
+    Res :
+    {
+        "message" : "Update Post Success",
+        "data" : {
+            "id" : 1,            
+            "Perihal" : "Perihal Perjalanan Dinas 2",
+            "lokasi" : "Lokasi Perjalanan Dinas 2",
+            "tanggal_berangkat" : "2022-12-11",
+            "tanggal_pulang" : "2022-12-13",
+            "dasar_Perjalan Dinas" : "file.pdf",
+            "date_created" : timestamp
+        }
+    }
+
+    err-response:
+    400 -> input yang anda masukkan tidak valid,
+    404 -> halaman yang anda tuju tidak ditemukan,
+    500 -> internal server error
+
+=============================================================================================================
+
+[5] Delete Perjalanan Dinas
+    Link    : {root.api}/{version}/perjadin/delete/{id}
+    Method  : DELETE
+
+    Res :
+    {
+        "message" : "Delete Post Success",
+        "data" : {
+            "id" : 1,            
+            "Perihal" : "Perihal Perjalanan Dinas",
+            "lokasi" : "Lokasi Perjalanan Dinas",
+            "tanggal_berangkat" : "2022-12-11",
+            "tanggal_pulang" : "2022-12-13",
+            "dasar_Perjalan Dinas" : "file.pdf",
+            "date_created" : timestamp
+        }
+    }
+
+    err-response:
+    400 -> input yang anda masukkan tidak valid,
+    404 -> halaman yang anda tuju tidak ditemukan,
+    500 -> internal server error
+
+=============================================================================================================
