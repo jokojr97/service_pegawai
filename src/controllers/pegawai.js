@@ -8,6 +8,93 @@ const saltRounds = 10;
 const Pegawai = require('../models/pegawai');
 // const pegawai = require('../models/pegawai');
 
+exports.delete = async (req, res, next) => {
+    const id = req.params.id || 0;
+    if (id == 0) {
+        return res.status(400).json({
+            message: "invalid value id",
+            data: null
+        })
+        next()
+    }
+
+    const data = {
+        _id: id
+    }
+
+    try {
+        const pegawai = await Pegawai.findOne(data);
+        await pegawai.remove();
+        return res.status(200).json({
+            message: "Data dengan id= " + id + " berhasil di hapus",
+            data: true
+        });
+    } catch {
+        return res.status(404).json({
+            message: "data Pegawai not found",
+            eror: "not found"
+        });
+    }
+
+    // .then(result => {
+    //     // console.log("id: ", id)
+    //     // console.log("result: ", result)
+    //     return res.status(200).json({
+    //         message: "Data berhasil ditampilkan",
+    //         data: result,
+    //     })
+    // })
+    // .catch(err => {
+    //     return res.status(404).json({
+    //         message: "data with id = '" + err.value + "' not found",
+    //         eror: err
+    //     });
+    //     next();
+    // })
+}
+exports.update = async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const data = {
+        _id: req.body._id
+    }
+
+    // cek error validasi
+    if (!errors.isEmpty()) {
+        const err = new Error("invalid value")
+        err.errorStatus = 400;
+        err.data = errors.array();
+        return res.status(err.errorStatus).json({
+            message: "Invalid Value!",
+            data: err
+        })
+    }
+
+    try {
+        const cariPegawai = await Pegawai.findOne(data);
+        const pegawai = Object.assign(cariPegawai, req.body);
+
+        pegawai.save().then(result => {
+            res.status(200).json({
+                message: "Update Data Success",
+                data: result
+            });
+        }).catch(err => {
+            console.log("err: ", err);
+            res.status(400).json({
+                message: "invalid value",
+                eror: err
+            });
+        });
+
+    } catch {
+        return res.status(404).json({
+            message: "data not found",
+            eror: "not found"
+        });
+    }
+
+}
 exports.insert = async (req, res, next) => {
     // inisiasi error validasi
     const errors = validationResult(req);
@@ -136,8 +223,8 @@ exports.getById = async (req, res, next) => {
     }
     await Pegawai.findOne(data)
         .then(result => {
-            console.log("id: ", id)
-            console.log("result: ", result)
+            // console.log("id: ", id)
+            // console.log("result: ", result)
             if (result) {
                 return res.status(200).json({
                     message: "Data berhasil ditampilkan",
@@ -145,14 +232,14 @@ exports.getById = async (req, res, next) => {
                 })
             } else {
                 return res.status(400).json({
-                    message: "data masih kosong",
+                    message: "data not found",
                     data: null,
                 })
             }
         })
         .catch(err => {
-            return res.status(400).json({
-                message: "invalid value",
+            return res.status(404).json({
+                message: "data with id = '" + err.value + "' not found",
                 eror: err
             });
             next();
