@@ -5,13 +5,26 @@ const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
-const User = require('../models/user');
 const Pegawai = require('../models/pegawai');
 // const pegawai = require('../models/pegawai');
 
 exports.register = async (req, res, next) => {
     // inisiasi error validasi
     const errors = validationResult(req);
+
+    const data = {
+        email: req.body.email
+    }
+    //cek email pegawai sudah terdaftar
+    const cariPegawai = await Pegawai.findOne(data)
+    // console.log(caripegawai)
+    if (cariPegawai != null) {
+        return res.status(400).json({
+            message: "Email sudah terdaftar!",
+            data: cariPegawai
+        })
+        next()
+    }
 
     // cek error validasi
     if (!errors.isEmpty()) {

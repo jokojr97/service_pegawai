@@ -7,8 +7,7 @@ const path = require('path')
 const app = express();
 const port = 4000;
 const authRoutes = require("./src/routes/auth")
-const blogRoutes = require("./src/routes/blog")
-const perjadinRoutes = require("./src/routes/perjadin")
+const pegawaiRoutes = require("./src/routes/pegawai")
 // const portofolioRoutes = require("./src/routes/portofolio")
 // const router = express.Router();
 
@@ -43,10 +42,10 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 })
+
+//routes
 app.use('/v1/auth', authRoutes);
-app.use('/v1/blog', blogRoutes);
-app.use('/v1/perjadin', perjadinRoutes);
-// app.use('/', routes);
+app.use('/v1/pegawai', pegawaiRoutes);
 
 app.use((error, req, res, next) => {
     const status = error.errorStatus || 500;
