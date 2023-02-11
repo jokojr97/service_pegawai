@@ -35,22 +35,6 @@ exports.delete = async (req, res, next) => {
             eror: "not found"
         });
     }
-
-    // .then(result => {
-    //     // console.log("id: ", id)
-    //     // console.log("result: ", result)
-    //     return res.status(200).json({
-    //         message: "Data berhasil ditampilkan",
-    //         data: result,
-    //     })
-    // })
-    // .catch(err => {
-    //     return res.status(404).json({
-    //         message: "data with id = '" + err.value + "' not found",
-    //         eror: err
-    //     });
-    //     next();
-    // })
 }
 exports.update = async (req, res, next) => {
     const errors = validationResult(req);
@@ -178,10 +162,10 @@ exports.getAll = (req, res, next) => {
     const currentPageInt = parseInt(currentPage);
     const perPageInt = parseInt(perPage);
 
-    Pegawai.find().countDocuments()
+    Pegawai.find().sort({ createdAt: "desc" }).countDocuments()
         .then(count => {
             totalItem = count;
-            return Pegawai.find().skip((currentPageInt - 1) * perPageInt).limit(perPageInt)
+            return Pegawai.find().sort({ createdAt: "desc" }).skip((currentPageInt - 1) * perPageInt).limit(perPageInt)
         })
         .then(result => {
             if (totalItem == 0) {
@@ -221,6 +205,7 @@ exports.getById = async (req, res, next) => {
     const data = {
         _id: id
     }
+
     await Pegawai.findOne(data)
         .then(result => {
             // console.log("id: ", id)
