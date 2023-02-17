@@ -16,7 +16,7 @@ const Pegawai = new Schema({
     },
     nip: {
         type: String,
-        require: true
+        require: false
     },
     instansi: {
         type: String,
@@ -33,6 +33,10 @@ const Pegawai = new Schema({
     golongan: {
         type: String,
         require: true
+    },
+    pangkat: {
+        type: String,
+        require: false
     },
     image: {
         type: String,

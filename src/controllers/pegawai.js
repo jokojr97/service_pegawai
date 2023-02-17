@@ -118,6 +118,8 @@ exports.insert = async (req, res, next) => {
     const jabatan = req.body.jabatan;
     const bidang = req.body.bidang;
     const golongan = req.body.golongan;
+    const pangkat = req.body.pangkat;
+    const role = req.body.role;
 
     // hashing password
     const salt = await bcrypt.genSalt(10);
@@ -134,10 +136,8 @@ exports.insert = async (req, res, next) => {
         bidang: bidang,
         golongan: golongan,
         image: image,
-        level: {
-            id: 1,
-            level: "admin"
-        },
+        pangkat: pangkat,
+        level: role,
     });
 
     insertPegawai.save()
@@ -155,23 +155,41 @@ exports.insert = async (req, res, next) => {
         });
 }
 
+const getsort = (sort, sortvalue) => {
+    if (sort == "name") {
+        return { name: sortvalue }
+    } else if (sort == "instansi") {
+        return { instansi: sortvalue }
+    } else if (sort == "bidang") {
+        return { bidang: sortvalue }
+    } else if (sort == "jabatan") {
+        return { jabatan: sortvalue }
+    } else if (sort == "golongan") {
+        return { golongan: sortvalue }
+    }
+}
+
 exports.getAll = (req, res, next) => {
+    const search = req.query.search || '';
+    const sort = req.query.sort || 'createdAt';
+    const sortval = req.query.sortval || 'desc';
+    const srt = getsort(sort, sortval)
     const currentPage = req.query.page || 1;
     const perPage = req.query.perPage || 5;
     let totalItem;
     const currentPageInt = parseInt(currentPage);
     const perPageInt = parseInt(perPage);
 
-    Pegawai.find().sort({ createdAt: "desc" }).countDocuments()
+    Pegawai.find({ name: { $regex: '.*' + search + '.*' } }).sort(srt).countDocuments()
         .then(count => {
             totalItem = count;
-            return Pegawai.find().sort({ createdAt: "desc" }).skip((currentPageInt - 1) * perPageInt).limit(perPageInt)
+            return Pegawai.find({ name: { $regex: '.*' + search + '.*' } }).sort(srt).skip((currentPageInt - 1) * perPageInt).limit(perPageInt)
         })
         .then(result => {
             if (totalItem == 0) {
                 res.status(400).json({
-                    message: "data masih kosong",
-                    data: result,
+                    message: "data tidak ditemukan",
+                    data: result
                 })
             } else {
                 res.status(200).json({
@@ -179,7 +197,8 @@ exports.getAll = (req, res, next) => {
                     data: result,
                     total_data: totalItem,
                     current_page: currentPageInt,
-                    per_page: perPageInt
+                    per_page: perPageInt,
+                    search: search
                 })
             }
         })
