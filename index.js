@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 const path = require('path')
+const http = require('http')
 
 const app = express();
 const port = 4000;
@@ -34,6 +35,7 @@ const fileFilter = (req, file, cb) => {
 
 app.use(bodyParser.json()) // type json
 app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/excel', express.static(path.join(__dirname, 'excel')));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'))
 
 app.use((req, res, next) => {
@@ -47,6 +49,7 @@ app.use((req, res, next) => {
 //routes
 app.use('/v1/auth', authRoutes);
 app.use('/v1/pegawai', pegawaiRoutes);
+
 
 app.use((error, req, res, next) => {
     const status = error.errorStatus || 500;
