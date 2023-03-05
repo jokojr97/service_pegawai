@@ -5,6 +5,8 @@ const multer = require('multer')
 const path = require('path')
 const http = require('http')
 
+const upload = require('express-fileupload')
+
 const app = express();
 const port = 4000;
 const authRoutes = require("./src/routes/auth")
@@ -32,6 +34,8 @@ const fileFilter = (req, file, cb) => {
         cb(null, false);
     }
 }
+
+app.use(upload())
 
 app.use(bodyParser.json()) // type json
 app.use('/images', express.static(path.join(__dirname, 'images')));

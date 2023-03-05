@@ -54,6 +54,8 @@ router.patch('/update/nonpass', [
 // [GET]: /v1/pegawai/ID
 router.get('/:id', pegawaiController.getById)
 
+router.post('/excel/import', pegawaiController.excelImport)
+
 // [DELETE]: /v1/pegawai/ID
 router.delete('/:id', pegawaiController.delete)
 
