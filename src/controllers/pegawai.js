@@ -1,9 +1,8 @@
 const { validationResult } = require('express-validator')
-const path = require('path');
-const fs = require('fs');
+// const path = require('path');
+// const fs = require('fs');
 const bcrypt = require('bcrypt');
-const upload = require('express-fileupload')
-const importExcel = require('convert-excel-to-json')
+// const importExcel = require('convert-excel-to-json')
 
 
 const saltRounds = 10;
@@ -215,22 +214,24 @@ exports.getAll = (req, res, next) => {
 }
 
 exports.excelImport = async (req, res, next) => {
-    const file = req.body.files
-    console.log(file)
-    const filename = file.name
-    file.mv('./excel/' + filename, (err) => {
-        if (err) {
-            return res.status(400).json({
-                message: "invalid value",
-                eror: err
-            });
-        } else {
-            res.status(200).json({
-                message: "Data berhasil ditampilkan",
-                url: './excel/' + filename
-            })
-        }
-    })
+    // const file = req.body
+    // console.log(file)
+
+
+    // const filename = file.name
+    // file.mv('./excel/' + filename, (err) => {
+    //     if (err) {
+    //         return res.status(400).json({
+    //             message: "invalid value",
+    //             eror: err
+    //         });
+    //     } else {
+    //         res.status(200).json({
+    //             message: "Data berhasil ditampilkan",
+    //             url: './excel/' + filename
+    //         })
+    //     }
+    // })
 }
 
 exports.getById = async (req, res, next) => {

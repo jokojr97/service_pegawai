@@ -1,9 +1,11 @@
 const express = require('express')
-
+const multer = require('multer')
+const XLSX = require('xlsx')
 const { body } = require('express-validator')
 const router = express.Router();
 
 const pegawaiController = require('../controllers/pegawai');
+
 
 // [POST] : /v1/auth/create
 // router.post('/create', [
@@ -54,7 +56,60 @@ router.patch('/update/nonpass', [
 // [GET]: /v1/pegawai/ID
 router.get('/:id', pegawaiController.getById)
 
-router.post('/excel/import', pegawaiController.excelImport)
+// router.post('/excel/import', pegawaiController.excelImport)
+
+//import excel
+const fileStorageExcel = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'excel')
+    },
+    filename: (req, file, cb) => {
+        cb(null, new Date().getTime() + '-' + file.originalname);
+    }
+});
+
+const uploadExcel = multer({ storage: fileStorageExcel });
+
+
+const storage = multer.diskStorage({
+    destination: "./uploads/",
+    filename: function (req, file, cb) {
+        const fileName = file.originalname.toLowerCase().split(' ').join('-');
+        cb(null, Date.now() + '-' + fileName)
+    }
+});
+
+
+const uploadpdf = multer({
+    storage: storage,
+    limits: { fileSize: 100000 }
+}).single("excel");
+
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg" || file.mimetype == "application/pdf") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            return cb(new Error('Only .png, .jpg .pdf and .jpeg  format allowed!'));
+        }
+    }
+}).single("excel");
+
+
+router.post('/excel/import', upload, (req, res, next) => {
+    console.log(req.file)
+    // const workbook = XLSX.readFile(req.files.path)
+    // const sheet_namelist = workbook.SheetNames
+    // var x = 0
+    // sheet_namelist.forEach(e => {
+    //     const xlData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_namelist[x]])
+    //     console.log(xlData)
+    // })
+
+})
+
 
 // [DELETE]: /v1/pegawai/ID
 router.delete('/:id', pegawaiController.delete)

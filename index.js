@@ -2,9 +2,9 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const multer = require('multer')
+const XLSX = require('xlsx')
 const path = require('path')
 const http = require('http')
-
 const upload = require('express-fileupload')
 
 const app = express();
@@ -15,6 +15,14 @@ const pegawaiRoutes = require("./src/routes/pegawai")
 // const router = express.Router();
 
 const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, new Date().getTime() + '-' + file.originalname);
+    }
+});
+const fileStorageExcel = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'images')
     },
@@ -38,9 +46,11 @@ const fileFilter = (req, file, cb) => {
 app.use(upload())
 
 app.use(bodyParser.json()) // type json
+//static folder path
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/excel', express.static(path.join(__dirname, 'excel')));
-app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'))
+// app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'))
+// app.use(multer({ storage: fileStorageExcel }).single('excel'))
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -53,7 +63,6 @@ app.use((req, res, next) => {
 //routes
 app.use('/v1/auth', authRoutes);
 app.use('/v1/pegawai', pegawaiRoutes);
-
 
 app.use((error, req, res, next) => {
     const status = error.errorStatus || 500;
