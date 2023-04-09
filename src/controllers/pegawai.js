@@ -56,9 +56,91 @@ exports.update = async (req, res, next) => {
         })
     }
 
+    const password = req.body.password;
+
+    // hashing password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const bodyData = {
+        name: req.body.name,
+        email: req.body.email,
+        password: hashedPassword,
+        nip: req.body.nip,
+        instansi: req.body.instansi,
+        jabatan: req.body.jabatan,
+        bidang: req.body.bidang,
+        golongan: req.body.golongan,
+        image: req.body.image,
+        pangkat: req.body.pangkat,
+        level: req.body.level,
+    }
+
     try {
         const cariPegawai = await Pegawai.findOne(data);
-        const pegawai = Object.assign(cariPegawai, req.body);
+        const pegawai = Object.assign(cariPegawai, bodyData);
+
+        pegawai.save().then(result => {
+            res.status(200).json({
+                message: "Update Data Success",
+                data: result
+            });
+        }).catch(err => {
+            console.log("err: ", err);
+            res.status(400).json({
+                message: "invalid value",
+                eror: err
+            });
+        });
+
+    } catch {
+        return res.status(404).json({
+            message: "data not found",
+            eror: "not found"
+        });
+    }
+
+}
+exports.updateNonpass = async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const data = {
+        _id: req.body._id
+    }
+
+    // cek error validasi
+    if (!errors.isEmpty()) {
+        const err = new Error("invalid value")
+        err.errorStatus = 400;
+        err.data = errors.array();
+        return res.status(err.errorStatus).json({
+            message: "Invalid Value!",
+            data: err
+        })
+    }
+
+    const password = req.body.password;
+
+    // hashing password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const bodyData = {
+        name: req.body.name,
+        email: req.body.email,
+        nip: req.body.nip,
+        instansi: req.body.instansi,
+        jabatan: req.body.jabatan,
+        bidang: req.body.bidang,
+        golongan: req.body.golongan,
+        image: req.body.image,
+        pangkat: req.body.pangkat,
+        level: req.body.level,
+    }
+
+    try {
+        const cariPegawai = await Pegawai.findOne(data);
+        const pegawai = Object.assign(cariPegawai, bodyData);
 
         pegawai.save().then(result => {
             res.status(200).json({
@@ -121,7 +203,7 @@ exports.insert = async (req, res, next) => {
     const bidang = req.body.bidang;
     const golongan = req.body.golongan;
     const pangkat = req.body.pangkat;
-    const role = req.body.role;
+    const level = req.body.level;
 
     // hashing password
     const salt = await bcrypt.genSalt(10);
@@ -139,7 +221,7 @@ exports.insert = async (req, res, next) => {
         golongan: golongan,
         image: image,
         pangkat: pangkat,
-        level: role,
+        level: level,
     });
 
     insertPegawai.save()

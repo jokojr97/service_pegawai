@@ -34,11 +34,7 @@ router.patch('/update', [
     body('name').notEmpty().withMessage("Nama tidak boleh kosong"),
     body('email').isEmail().withMessage("Format Email Tidak Sesuai"),
     body('repeatPassword').custom((value, { req }) => value === req.body.password).withMessage("Ulangi Password harus sama dengan password!"),
-    body('nip').notEmpty().withMessage("nip tidak boleh kosong"),
     body('instansi').notEmpty().withMessage("Instansi tidak boleh kosong"),
-    body('jabatan').notEmpty().withMessage("Jabatan tidak boleh kosong"),
-    body('bidang').notEmpty().withMessage("Bidang tidak boleh kosong"),
-    body('golongan').notEmpty().withMessage("Golongan tidak boleh kosong"),
     body('password').isLength({ min: 5 }).withMessage("Password tidak sesuai minimal 5 karakter")],
     pegawaiController.update);
 
@@ -46,12 +42,8 @@ router.patch('/update/nonpass', [
     body('_id').notEmpty().withMessage("Id tidak boleh kosong"),
     body('name').notEmpty().withMessage("Nama tidak boleh kosong"),
     body('email').isEmail().withMessage("Format Email Tidak Sesuai"),
-    body('nip').notEmpty().withMessage("nip tidak boleh kosong"),
-    body('instansi').notEmpty().withMessage("Instansi tidak boleh kosong"),
-    body('jabatan').notEmpty().withMessage("Jabatan tidak boleh kosong"),
-    body('bidang').notEmpty().withMessage("Bidang tidak boleh kosong"),
-    body('golongan').notEmpty().withMessage("Golongan tidak boleh kosong")],
-    pegawaiController.update);
+    body('instansi').notEmpty().withMessage("Instansi tidak boleh kosong"),],
+    pegawaiController.updateNonpass);
 
 // [GET]: /v1/pegawai/ID
 router.get('/:id', pegawaiController.getById)
